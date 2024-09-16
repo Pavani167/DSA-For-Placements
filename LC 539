@@ -1,0 +1,36 @@
+Minimum Time Difference:
+Java:
+import java.util.*;
+
+class Solution {
+    public int findMinDifference(List<String> timePoints) {
+        int n = timePoints.size();
+        if (n > 1440) return 0; // Maximum 1440 possible unique minutes in a day
+
+        // Convert all time points to minutes
+        List<Integer> minutesList = new ArrayList<>();
+        for (String time : timePoints) {
+            String[] parts = time.split(":");
+            int hours = Integer.parseInt(parts[0]);
+            int minutes = Integer.parseInt(parts[1]);
+            minutesList.add(hours * 60 + minutes);
+        }
+
+        // Sort the list
+        Collections.sort(minutesList);
+
+        // Initialize minimum difference
+        int minDiff = Integer.MAX_VALUE;
+
+        // Compare adjacent times and calculate minimum difference
+        for (int i = 1; i < n; i++) {
+            minDiff = Math.min(minDiff, minutesList.get(i) - minutesList.get(i - 1));
+        }
+
+        // Account for the circular difference (24-hour wrap-around)
+        int circularDiff = 1440 - minutesList.get(n - 1) + minutesList.get(0);
+        minDiff = Math.min(minDiff, circularDiff);
+
+        return minDiff;
+    }
+}
